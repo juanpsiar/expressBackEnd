@@ -3,6 +3,12 @@ const app = express();
 const routerApi = require('./routes');
 const port = 3000;
 
+const {
+  logErrors,
+  errorHandler,
+  boomErrorHandler,
+} = require('./middlewares/errror.handler');
+
 app.use(express.json());
 
 app.get('/', (req, res) => {
@@ -29,6 +35,10 @@ app.get('/categories/:categoryId/products/:productId', (req, res) => {
   });
 });
 routerApi(app);
+
+app.use(logErrors);
+app.use(boomErrorHandler);
+app.use(errorHandler); //? this method kill the request because that is called after of logErrors
 
 app.listen(port, () => {
   console.log('my port', port);
